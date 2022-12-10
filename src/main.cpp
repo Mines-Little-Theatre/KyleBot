@@ -1,5 +1,3 @@
-#include "dispatcher.h"
-#include "message.h"
 #include <cctype>
 #include <cstdlib>
 #include <iostream>
@@ -9,38 +7,31 @@
 #include <regex>
 #include <array>
 
-
-std::string getToken(const std::string& KEY){
-    const char* tokenPtr = std::getenv(KEY.c_str());
-
-    if (tokenPtr == nullptr){
-        std::cerr << "Failed to locate key: " << KEY << std::endl;
-        throw std::runtime_error("Failed to read API Token.");
-    }
-
-    std::string token(tokenPtr);
-
-    return token;
-}
-
-
+#include "util.h"
 
 int main(int argc, const char** argv){
-    if(argc != 2){
-        std::cerr << "Usage: [kyleBot] [tokenEnvKey]" << std::endl;
+    if(argc != 3){
+        std::cerr << "Usage: KyleBot [tokenEnvKey] [sqliteDBLocKey]" << std::endl;
         return -1;
     }
 
-    const std::string TOKEN = getToken(argv[1]);
-    // const dpp::snowflake legallyblondeRole(935610120883306516);
+
+    bool tokenResult = false, dbPathResult = false;
+    std::string token, dbPath;
+
+    tokenResult = getEnvValue(argv[1], token);
+    dbPathResult = getEnvValue(argv[2], dbPath);
+    
+    if(!tokenResult || !dbPathResult){
+        return -1;
+    }
 
     uint64_t intents = dpp::i_default_intents | dpp::i_message_content;
 
 
-    dpp::cluster kyleBot(TOKEN, intents);
+    dpp::cluster kyleBot(token, intents);
 
     // shove log messages to stdout cause im lazy
-    
     kyleBot.on_log(dpp::utility::cout_logger());
     
     // This will run for every message created
@@ -50,19 +41,23 @@ int main(int argc, const char** argv){
             if(event.msg.author.is_bot()){
                 return;
             }
-            
-            // lower cases the message then uses the find method to see if package occurs anywhere in the
-            //  message
+
+            // get non const copy of message
             std::string message = event.msg.content;
-            std::transform(message.begin(), message.end(), message.begin(), ::tolower);
 
-            bool packageMatched = message.find("package") != std::string::npos;
-
+            unsigned int numberOfPackages = 0;
+            bool packageMatched = containsPackage(message, numberOfPackages);
+            
             if(packageMatched) {
 
                 // if the user does not have a nickname on the server.
                 if(event.msg.member.nickname.empty()){
                     event.reply(dpp::message("You are not worthy of a package"), true);
+                    return;
+                }
+
+                if(numberOfPackages > 1){
+                    event.reply(dpp::message("I've got " + std::to_string(numberOfPackages) + " ***packages*** for " + event.msg.member.nickname), false);
                     return;
                 }
 
