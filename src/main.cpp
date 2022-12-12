@@ -47,6 +47,10 @@ int main(int argc, const char** argv){
 
             unsigned int numberOfPackages = 0;
             bool packageMatched = containsPackage(message, numberOfPackages);
+
+            bool isBoardMember=false, isLegallyBlonde=false;
+            
+            checkRoles(event.msg.member.roles, isBoardMember, isLegallyBlonde);
             
             if(packageMatched) {
 
