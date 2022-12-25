@@ -51,7 +51,7 @@ int main(int argc, const char** argv){
             bool isBoardMember=false, isLegallyBlonde=false;
             
             checkRoles(event.msg.member.roles, isBoardMember, isLegallyBlonde);
-            
+        
             if(packageMatched) {
 
                 // if the user does not have a nickname on the server.
@@ -60,12 +60,15 @@ int main(int argc, const char** argv){
                     return;
                 }
 
+                // Get formatted name
+                const std::string name = processName(event.msg.member.nickname, isBoardMember);
+
                 if(numberOfPackages > 1){
-                    event.reply(dpp::message("I've got " + std::to_string(numberOfPackages) + " ***packages*** for " + event.msg.member.nickname), false);
+                    event.reply(dpp::message("I've got " + std::to_string(numberOfPackages) + " ***packages*** for " + name), false);
                     return;
                 }
 
-                event.reply(dpp::message("I've got a ***package*** for " + event.msg.member.nickname), false);
+                event.reply(dpp::message("I've got a ***package*** for " + name), false);
             }
     });
 

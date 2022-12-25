@@ -62,3 +62,33 @@ void checkRoles(const std::vector<dpp::snowflake>& _roles, bool& _isBoardMember,
     }
 
 }
+
+
+std::string processName(const std::string& _userNickname, const bool& IS_BOARD){
+    std::string name;
+    std::string match;
+
+    if (IS_BOARD){
+        match = " - ";
+
+        size_t loc = _userNickname.find(match); 
+        if(loc != std::string::npos){
+           name = "The " + _userNickname.substr(loc + match.length());
+
+           return name;
+        }
+    }
+    
+    match = " ";
+    
+    size_t loc = _userNickname.find(match);
+
+    if (loc != std::string::npos) {
+        name = _userNickname.substr(0, loc);
+
+        return name;
+    }
+
+    return _userNickname;
+
+}
