@@ -19,4 +19,4 @@ RUN cmake -B /app/cmake-build -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
 RUN cd /app/cmake-build && \
     make
 
-ENTRYPOINT [ "/app/cmake-build/ConcordBot" ]
+ENTRYPOINT [ "/app/cmake-build/KyleBot" ]
