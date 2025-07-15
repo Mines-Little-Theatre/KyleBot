@@ -8,14 +8,22 @@ set(DPP_INSTALL OFF CACHE BOOL "")
 set(DPP_BUILD_TEST OFF CACHE BOOL "")
 
 
-add_subdirectory(lib/DPP)
-add_subdirectory(lib/SQLiteCpp)
+# add_subdirectory(lib/SQLiteCpp)
 
+if (CMAKE_BUILD_TYPE STREQUAL "Release")
+    message(STATUS "Using system DPP")
+    find_package(dpp REQUIRED)
+    set(DPP_TARGET dpp::dpp)
+else()
+    message(STATUS "Using cloned DPP for debug mode")
+    add_subdirectory(lib/DPP)
+    include_directories(lib/DPP/include)
+    set(DPP_TARGET dpp)
+endif()
 
 set(CMAKE_CXX_STANDARD 17)
 
-include_directories(lib/DPP/include)
-include_directories(lib/SQLiteCpp/include)
+# include_directories(lib/SQLiteCpp/include)
 
 set(SRC_FILES src/main.cpp src/util.cpp src/util.h)
 
@@ -30,11 +38,10 @@ IF( EXISTS "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json" )
 ENDIF()
 
 
-
 add_executable(KyleBot ${SRC_FILES})
 
 target_link_libraries(KyleBot dpp)
-target_link_libraries(KyleBot SQLiteCpp)
+# target_link_libraries(KyleBot SQLiteCpp)
 
 set_target_properties(KyleBot PROPERTIES
     CXX_STANDARD 17

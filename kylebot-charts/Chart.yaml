@@ -1,0 +1,7 @@
+apiVersion: v2
+name: KyleBot
+type: application
+description: A bot that loves to deliver packages
+version: 1.0.0
+appVersion: "v1.0.0"
+

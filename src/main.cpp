@@ -50,18 +50,18 @@ int main(int argc, const char** argv){
 
             bool isBoardMember=false, isLegallyBlonde=false;
             
-            checkRoles(event.msg.member.roles, isBoardMember, isLegallyBlonde);
+            checkRoles(event.msg.member.get_roles(), isBoardMember, isLegallyBlonde);
         
             if(packageMatched) {
 
                 // if the user does not have a nickname on the server.
-                if(event.msg.member.nickname.empty()){
+                if(event.msg.member.get_nickname().empty()){
                     event.reply(dpp::message("You are not worthy of a package"), true);
                     return;
                 }
 
                 // Get formatted name
-                const std::string name = processName(event.msg.member.nickname, isBoardMember);
+                const std::string name = processName(event.msg.member.get_nickname(), isBoardMember);
 
                 if(numberOfPackages > 1){
                     event.reply(dpp::message("I've got " + std::to_string(numberOfPackages) + " ***packages*** for " + name), false);
