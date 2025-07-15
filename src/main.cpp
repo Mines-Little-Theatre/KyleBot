@@ -10,19 +10,18 @@
 #include "util.h"
 
 int main(int argc, const char** argv){
-    if(argc != 3){
-        std::cerr << "Usage: KyleBot [tokenEnvKey] [sqliteDBLocKey]" << std::endl;
+    if(argc != 2){
+        std::cerr << "Usage: KyleBot [tokenEnvKey]" << std::endl;
         return -1;
     }
 
 
-    bool tokenResult = false, dbPathResult = false;
-    std::string token, dbPath;
+    bool tokenResult = false;
+    std::string token;
 
     tokenResult = getEnvValue(argv[1], token);
-    dbPathResult = getEnvValue(argv[2], dbPath);
     
-    if(!tokenResult || !dbPathResult){
+    if(!tokenResult){
         return -1;
     }
 
